@@ -3,26 +3,25 @@
 
 {% block content %}
 <form action="{% url 'menu:start_buy' %}" method="post">
-{% csrf_token %}
-<input type="hidden" name="menu_pk" value="{{menu.pk}}">
-<!-- <p>日期 : <input type="datetime" name="order_time" value="{% now "m/d/Y" %}" id="order_time"/><input type="submit" value="開始團購" /></p> -->
+	{% csrf_token %}
+	<input type="hidden" name="menu_pk" value="{{menu.pk}}">
+	<!-- <p>日期 : <input type="datetime" name="order_time" value="{% now "m/d/Y" %}" id="order_time"/><input type="submit" value="開始團購" /></p> -->
 
-<p>
-    <div class="container">
-        <div class="row">
-            <div class='col-sm-6'>
-                <label>便當日期 : </label>
-                <input type="datetime" name="order_time" value="{% now "m/d/Y" %}" id="order_time" />
-                <input type="submit" value="開始團購" />
-                <p><input type="radio" name="type" value="launch" checked/>午餐</p>
-                <p><input type="radio" name="type" value="dinner"/>晚餐(公司補助80元)</p>
-                <p>附註 : <input type="text" name="misc" /></p>
-                <label>截止時間 :</label>
-                <input type='datetime' name="end_time" id='end_time'/>
-            </div>
-        </div>
-    </div>
-</p>
+	<p>
+	<div class="container">
+		<div class="row">
+			<div class='col-sm-6'>
+				<label>便當日期 : </label>
+				<input type="datetime" name="order_time" value="{% now "m/d/Y" %}" id="order_time" />
+				<p><input type="radio" name="type" value="launch" checked/>午餐</p>
+				<p><input type="radio" name="type" value="dinner"/>晚餐(公司補助80元)</p>
+				<p>附註 : <input type="text" name="misc" /></p>
+				<p>結束時間:<input type='datetime' name="end_time" id='end_time'/></p>
+			</div>
+		</div>
+	</div>
+	<input type="submit" class='btn btn-primary'value="開始團購" />
+	</p>
 </form>
 <h1>{{ menu.store_name }} : TEL {{ menu.tele_num }}</h1>
 <h2>{{menu.misc}}</h2>
@@ -32,5 +31,32 @@
 	<li>{{ dish.dish_name }} : {{dish.price}} </li>	
 {% endfor %}
 
+<script type="text/javascript">
+$(function() {
+	//便當日期
+	$('#order_time').datepicker();
+
+	//截止時間
+	$('#end_time').datetimepicker({
+		format: 'MM/DD/YYYY HH:mm',
+	});
+
+	//午餐時間
+	var lunchTime = $('#order_time').val() + ' 10:00';
+	$('#end_time').val(moment(lunchTime).format("MM/DD/YYYY HH:mm"));
+
+	$('input:radio[name="type"]').change(function(){
+		if ($(this).val() == 'dinner') {
+			//晚餐時間
+			var dinnerTime = $('#order_time').val() + ' 16:00';
+			$('#end_time').val(moment(dinnerTime).format("MM/DD/YYYY HH:mm"));
+		}else if($(this).val() == 'launch') {
+			//午餐時間
+			var lunchTime = $('#order_time').val() + ' 10:00';
+			$('#end_time').val(moment(lunchTime).format("MM/DD/YYYY HH:mm"));
+		}
+	});
+});
+</script>
 
 {% endblock %}

@@ -24,33 +24,6 @@
     <script type="text/javascript" src="{% static 'dist/js/bootstrap-datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'dist/js/bootstrap-datepicker.js' %}"></script>
     
-    <script type="text/javascript">
-        $(function() {
-            //便當日期      
-            $('#order_time').datepicker();
-            
-            //截止時間
-            $('#end_time').datetimepicker({
-                format: 'MM/DD/YYYY HH:mm'
-            });
-
-            //午餐時間
-            var lunchTime = $('#order_time').val() + ' 10:00';
-            $('#end_time').val(moment(lunchTime).format("MM/DD/YYYY HH:mm"));
-            
-            $('input:radio[name="type"]').change(function(){
-                if ($(this).val() == 'dinner') {
-                    //晚餐時間
-                    var dinnerTime = $('#order_time').val() + ' 16:00';
-                    $('#end_time').val(moment(dinnerTime).format("MM/DD/YYYY HH:mm"));
-                }else if($(this).val() == 'launch') {
-                    //午餐時間
-                    var lunchTime = $('#order_time').val() + ' 10:00';
-                    $('#end_time').val(moment(lunchTime).format("MM/DD/YYYY HH:mm"));
-                }
-            });
-        });
-    </script>
     
 </head>
 
