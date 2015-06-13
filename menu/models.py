@@ -8,6 +8,8 @@ class Menu(models.Model):
     type = models.IntegerField(default=0)
     misc = models.CharField(max_length=200)
     tickets = models.IntegerField(default=0)
+    order_desc = models.CharField(max_length=1000)
+    desc = models.CharField(max_length=1000)
     def __unicode__(self):  # Python 3: def __str__(self):
         return self.store_name
     def vote_list(self):

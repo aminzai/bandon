@@ -156,22 +156,29 @@ def add_menu(request):
     tele_num = menu_list[3].split(": ")[1]
     
     item_list = menu_text[menu_text.index(u"產品:")+3:menu_text.index(u"訂購說明:")]
+
+    order_desc = menu_text[menu_text.index(u"訂購說明:")+5:menu_text.index(u"送達地區:")]
+    desc = menu_text[menu_text.index(u"店家詳細說明:")+7:]
     
-    
-    menu_set = Menu.objects.filter(store_name=store_name).distinct()
-    
-    if menu_set.count() == 0:
-        menu = Menu.objects.create()
-    else:
-        menu = menu_set[0]        
+    menu = Menu.objects.get_or_create(store_name=store_name)[0]
     
     menu.store_name = store_name
     menu.tele_num = tele_num
     menu.misc = misc
-    for item in item_list.splitlines():
-        item_name = item.split(", ")
-        if len(item_name) == 2:            
-            menu.dish_set.create(dish_name=item_name[0], price=int(item_name[1]))            
+    menu.order_desc = order_desc
+    menu.desc = desc
+    for row in item_list.splitlines():
+        d = row.split(",")
+        item_name = d[0]
+        if len(d) == 2:
+            menu.dish_set.create(dish_name=item_name, price=d[1])
+        else:
+            for v in d[1:]:
+                info = v.split()
+                name = "%s(%s)" % (item_name , info[0])
+                price = info[1]
+                menu.dish_set.create(dish_name=name, price=price)
+
     menu.save()
     return HttpResponseRedirect(reverse('menu:index'))
 
